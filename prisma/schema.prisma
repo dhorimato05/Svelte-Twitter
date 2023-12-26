@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  full_name String
+  username  String  @unique
+  password  String
+  email     String  @unique
+  avatar    String? @default("/images/default-avatar.png")
+}
+
+model Post {
+  id      Int    @id @default(autoincrement())
+  content String
+}

@@ -1,7 +1,10 @@
 <script lang="ts">
 	import '../../app.css';
+	import type { PageData } from './$types';
+	import LoginModal from './LoginModal.svelte';
 	import SignUpModal from './SignUpModal.svelte';
 	let showSignupModal = false;
+	let showLoginModal = false;
 
 	const footerLinks = [
 		{ label: 'About', href: '/' },
@@ -22,17 +25,20 @@
 		{ label: 'Directory', href: '/' },
 		{ label: 'Settings', href: '/' }
 	];
+
+	export let data: PageData;
 </script>
 
-<SignUpModal bind:showSignupModal />
+<svelte:head>
+	<title>Auth</title>
+</svelte:head>
+
+<SignUpModal bind:showSignupModal data={data.signUpForm} />
+<LoginModal bind:showLoginModal data={data.loginForm} />
 
 <div class="flex w-full h-full mb-4">
 	<div class="w-[54.5%]">
-		<img
-			src="src/lib/images/twitter-splash-page.png"
-			alt="Twitter Splash Page"
-			class="w-full h-full"
-		/>
+		<img src="images/twitter-splash-page.png" alt="Twitter Splash Page" class="w-full h-full" />
 	</div>
 	<div class="flex w-auto justify-center items-center h-[50vh]">
 		<div class="flex flex-col w-full p-9 justify-center">
@@ -100,15 +106,15 @@
 							<span class="font-bold text-white">Create account</span>
 						</button>
 						<div>
-							<span class="text-[11px] relative leading-[1px]"
-								>By signing up, you agree to the <a
+							<span class="text-[11px] relative leading-[1px]">
+								By signing up, you agree to the <a
 									class="text-[#1d9bf0] hover:underline"
 									href="/auth">Terms of Service</a
 								>
 								and
 								<a class="text-[#1d9bf0] hover:underline" href="/auth">Privacy Policy</a>, including
-								<a class="text-[#1d9bf0] hover:underline" href="/auth">Cookie Use.</a></span
-							>
+								<a class="text-[#1d9bf0] hover:underline" href="/auth">Cookie Use.</a>
+							</span>
 						</div>
 					</div>
 					<div class="flex flex-col absolute mt-[48px]">
@@ -116,6 +122,7 @@
 						<div>
 							<button
 								class="flex justify-center items-center rounded-3xl border border-slate-300 max-w-sm relative px-12 py-[10px] w-[300px] text-[15px] gap-[2px] hover:bg-slate-200 mt-4"
+								on:click={() => (showLoginModal = true)}
 							>
 								<span class="font-bold text-[#1d9bf0] hover:bg-[#E7FAFF]">Sign in</span>
 							</button>
@@ -128,7 +135,7 @@
 </div>
 
 <footer class="flex flex-col items-center justify-center">
-	<ul class="flex gap-4 pt-4 px-4 text-sm">
+	<ul class="flex gap-4 pt-4 px-4 text-xs">
 		{#each footerLinks as footerLink}
 			<span class="text-[#536471] hover:underline"
 				><a href={footerLink.href}>{footerLink.label}</a></span
