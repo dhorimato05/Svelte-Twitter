@@ -1,5 +1,18 @@
 <script lang="ts">
+	import { superForm } from 'sveltekit-superforms/client';
 	export let showSignupModal: boolean;
+
+	export let data: SuperValidated<CreateUserSchema>;
+
+	const { form, errors, enhance } = superForm(data, {
+		resetForm: true,
+		onResult: ({ result }) => {
+			if (result.type === 'success') {
+				showSignupModal = false;
+				return;
+			}
+		}
+	});
 </script>
 
 {#if showSignupModal}
@@ -23,40 +36,62 @@
 				<div class="flex items-start pb-8">
 					<h1 class="pl-16 text-[31px] font-extrabold">Create your account</h1>
 				</div>
-				<form method="POST" action="?/createUser" class="w-full pl-16 pr-16">
+				<form
+					method="POST"
+					action="?/createUser"
+					id="signupuser"
+					class="w-full pl-16 pr-16"
+					use:enhance
+				>
 					<div class="flex flex-col">
-						<div class="relative flex items-center mb-8">
+						<div class="relative flex flex-col items-center mb-8">
 							<input
 								type="text"
-								name="full-name"
+								name="full_name"
 								placeholder="Full Name"
 								class="w-full p-4 rounded border-[1px] border-slate-300"
+								bind:value={$form.full_name}
 							/>
-							<label for="full-name" class="pl-2 absolute text-slate-500 z-[-1]">Full Name</label>
+							{#if $errors.full_name}
+								<span class="block text-red-600 dark:text-red-500">{$errors.full_name}</span>
+							{/if}
 						</div>
-						<div class="flex items-center mb-8">
+
+						<div class="flex flex-col items-center mb-8">
 							<input
 								type="text"
 								name="username"
 								class="w-full p-4 rounded border-[1px] border-slate-300"
 								placeholder="Username"
+								bind:value={$form.username}
 							/>
+							{#if $errors.username}
+								<span class="block text-red-600 dark:text-red-500">{$errors.username}</span>
+							{/if}
 						</div>
-						<div class="flex items-center mb-8">
+						<div class="flex flex-col items-center mb-8">
 							<input
 								type="password"
 								name="password"
 								class="w-full p-4 rounded border-[1px] border-slate-300"
 								placeholder="Password"
+								bind:value={$form.password}
 							/>
+							{#if $errors.password}
+								<span class="block text-red-600 dark:text-red-500">{$errors.password}</span>
+							{/if}
 						</div>
-						<div class="flex items-center mb-8">
+						<div class="flex flex-col items-center mb-8">
 							<input
 								type="email"
 								name="email"
 								class="w-full p-4 rounded border-[1px] border-slate-300"
 								placeholder="Email Address"
+								bind:value={$form.email}
 							/>
+							{#if $errors.email}
+								<span class="block text-red-600 dark:text-red-500">{$errors.email}</span>
+							{/if}
 						</div>
 						<div class="flex items-center justify-center">
 							<button
